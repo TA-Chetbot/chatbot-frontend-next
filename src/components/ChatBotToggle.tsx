@@ -2,16 +2,7 @@
 
 import React, { useState } from "react";
 
-const ChatbotToggle = () => {
-  const [isChatboxOpen, setIsChatboxOpen] = useState(false);
-
-  const toggleChatbox = () => {
-    setIsChatboxOpen(!isChatboxOpen);
-  };
-
-  const closeChatbox = () => {
-    setIsChatboxOpen(false);
-  };
+const ChatbotToggle = ({toggleChatbox, isChatboxOpen}) => {
 
   return (
     <div>
