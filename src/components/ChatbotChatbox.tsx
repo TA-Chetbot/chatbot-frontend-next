@@ -13,6 +13,19 @@ export default function ChatbotChatbox({ isChatboxOpen, closeChatbox }) {
     e?.preventDefault();
     setIsTyping(true);
     setChatLog((prev) => [...prev, { role: "user", content: question }]);
+    const preprocessed_question = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/preprocess_question`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: question,
+        }),
+      }
+    );
+    const preprocessed_question_json = await preprocessed_question.json();
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/get_answer`,
       {
@@ -21,7 +34,7 @@ export default function ChatbotChatbox({ isChatboxOpen, closeChatbox }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          question: question,
+          question: preprocessed_question_json.preprocessed_question,
         }),
       }
     );
@@ -31,7 +44,6 @@ export default function ChatbotChatbox({ isChatboxOpen, closeChatbox }) {
       { role: "assistant", content: data.answer },
     ]);
     setIsTyping(false);
-    console.log(data);
     return data;
   }
 
